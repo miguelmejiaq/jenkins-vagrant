@@ -6,7 +6,7 @@
     java_packages: "openjdk-21-jdk"
     jenkins_packages: "jenkins"
     jenkins_server_ip: 192.168.56.4
-    jenkins_agent_secret: "55e26f96de7d4dbe0ddc379f7b2c08bd8638c5c50b3d4db8a427c2bad4f3f363"
+    jenkins_agent_secret: "" # Paste the secret after create the agent on Jenkins UI
     jenkins_agent_name: "agent"
   tasks:
     - include_tasks: common_jenkins_tasks.yml
