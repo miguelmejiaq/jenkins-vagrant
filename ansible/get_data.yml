@@ -1,0 +1,10 @@
+---
+- name: Work in ubuntu machines
+  hosts: all
+  tasks:
+    - name: check hostname
+      ansible.builtin.shell: hostname -A
+      register: hostname_result
+    - name: Debug message to show the hostname
+      debug:
+        msg: "Results of the VM are: {{ hostname_result.stdout }}"

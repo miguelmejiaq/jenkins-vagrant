@@ -1,0 +1,51 @@
+---
+- name: Configure Jenkins in the virtual machine
+  hosts: jenkins_agent
+  become: true
+  vars:
+    java_packages: "openjdk-21-jdk"
+    jenkins_packages: "jenkins"
+    jenkins_server_ip: 192.168.56.4
+    jenkins_agent_secret: "55e26f96de7d4dbe0ddc379f7b2c08bd8638c5c50b3d4db8a427c2bad4f3f363"
+    jenkins_agent_name: "agent"
+  tasks:
+    - include_tasks: common_jenkins_tasks.yml
+    - name: Create Jenkins agent user
+      user:
+        name: jenkins
+        shell: /bin/bash
+        create_home: yes
+    - name: Download Jenkins agent JAR
+      get_url:
+        url: "http://{{ jenkins_server_ip }}:8080/jnlpJars/agent.jar"  # Replace with your Jenkins server URL
+        dest: "/home/jenkins/agent.jar"
+        mode: '0755'
+    - name: Create systemd service for Jenkins agent
+      copy:
+        dest: /etc/systemd/system/jenkins-agent.service
+        content: |
+          [Unit]
+          Description=Jenkins Agent
+          After=network.target
+
+          [Service]
+          User=jenkins
+          WorkingDirectory=/home/jenkins
+          ExecStart=java -jar /home/jenkins/agent.jar -url http://{{ jenkins_server_ip }}:8080/ -name {{ jenkins_agent_name }} -secret {{ jenkins_agent_secret }} -webSocket -workDir "/home/jenkins/"
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+      notify: restart jenkins-agent
+
+    - name: Start and enable Jenkins agent service
+      systemd:
+        name: jenkins-agent
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: restart jenkins-agent
+      systemd:
+        name: jenkins-agent
+        state: restarted

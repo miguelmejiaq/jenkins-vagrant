@@ -1,0 +1,12 @@
+all:
+  vars:
+    ansible_user: vagrant
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    ansible_ssh_private_key_file: ssh/vagrant_key
+  hosts:
+    jenkins_server:
+      ansible_host: 192.168.56.4
+      # ansible_ssh_private_key_file: .vagrant/machines/web/virtualbox/private_key
+    jenkins_agent:
+      ansible_host: 192.168.56.5
+      # ansible_ssh_private_key_file: .vagrant/machines/web/virtualbox/private_key

@@ -1,0 +1,19 @@
+---
+- name: Update the apt package index
+  apt:
+    update_cache: yes
+- name: Add the GPG key for the Jenkins repository
+  apt_key:
+    url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+    state: present
+- name: Add the Jenkins repository
+  apt_repository:
+    repo: "deb http://pkg.jenkins.io/debian-stable binary/"
+    state: present
+- name: Update the apt package index again after adding Jenkins repo
+  apt:
+    update_cache: yes
+- name: Install Java
+  apt:
+    name: "{{ java_packages }}"
+    state: present
