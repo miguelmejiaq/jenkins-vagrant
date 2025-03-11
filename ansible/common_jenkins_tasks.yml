@@ -4,7 +4,7 @@
     update_cache: yes
 - name: Add the GPG key for the Jenkins repository
   apt_key:
-    url: "https://pkg.jenkins.io/debian/jenkins.io.key"
+    url: "https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key"
     state: present
 - name: Add the Jenkins repository
   apt_repository:

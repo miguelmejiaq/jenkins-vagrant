@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
       vb.gui = false
       vb.memory = "1024"
     end
+    web.ssh.password = "vagrant"
     web.vm.provision "file", source: "./ssh/vagrant_key.pub", destination: "/home/vagrant/.ssh/authorized_keys"
     web.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/authorized_keys"
   end
@@ -22,7 +23,22 @@ Vagrant.configure("2") do |config|
       vb.gui = false
       vb.memory = "1024"
     end
+    agent.ssh.password = "vagrant"
     agent.vm.provision "file", source: "./ssh/vagrant_key.pub", destination: "/home/vagrant/.ssh/authorized_keys"
     agent.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/authorized_keys"
+  end
+
+  config.vm.define "apache" do |apache|
+    apache.vm.box = "cloudicio/ubuntu-server"
+    apache.vm.box_version = "24.04.1"
+    apache.vm.hostname = "apache-server"
+    apache.vm.network "private_network", ip: "192.168.56.6"
+    apache.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+    end
+    apache.ssh.password = "vagrant"
+    apache.vm.provision "file", source: "./ssh/vagrant_key.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    apache.vm.provision "shell", inline: "chmod 600 /home/vagrant/.ssh/authorized_keys && sudo apt update && sudo apt install -y apache2"
   end
 end
