@@ -10,6 +10,14 @@
     jenkins_agent_name: "agent"
   tasks:
     - include_tasks: common_jenkins_tasks.yml
+    - name: Install Node.js and npm
+      apt:
+        name: nodejs
+        state: present
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
     - name: Create Jenkins agent user
       user:
         name: jenkins
